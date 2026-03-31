@@ -53,7 +53,7 @@ def preprocess_image(img: Image.Image) -> np.ndarray:
 st.title("Intelligent Systems — AI Web App")
 st.caption("ระบบ AI 2 โมเดล: ตรวจจำแนกรถจักรยานยนต์ & ตรวจจับข้อความพนัน")
 
-tab1, tab2 = st.tabs(["Motorcycle Classifier", "KanPhaNan Text Detector"])
+tab1, tab2 = st.tabs(["Motorcycle Classifier", "Gambling Text Detector"])
 
 # ══════════════════════════════════════════════════════════
 #  Tab 1 — Motorcycle Classifier
@@ -162,14 +162,14 @@ with tab1:
                     st.error(f"Error: {e}")
 
 # ══════════════════════════════════════════════════════════
-#  Tab 2 — KranPhaNan Text Detector
+#  Tab 2 — Gambling Text Detector
 # ══════════════════════════════════════════════════════════
 with tab2:
-    st.markdown('[ทดสอบโมเดลนี้ คลิกที่นี่ (เลื่อนไปส่วน "ใช้งานโมเดล")](#kanphanan-use-model)')
+    st.markdown('[ทดสอบโมเดลนี้ คลิกที่นี่ (เลื่อนไปส่วน "ใช้งานโมเดล")](#gambling-use-model)')
     st.subheader("ข้อมูลโมเดล")
     st.markdown("""
 ### ที่มาและความสำคัญของปัญหา
-จากการขยายตัวของแพลตฟอร์มวิดีโอออนไลน์ในประเทศไทย โดยเฉพาะ YouTube พบปัญหาการคุกคามจากกลุ่มมิจฉาชีพที่ใช้ระบบอัตโนมัติ (Botnet) ในการส่งข้อความสแปมเพื่อโฆษณาเว็บผิดกฎหมายออนไลน์ในช่องความคิดเห็นของยูทูบเบอร์ไทยชื่อดังและช่องสำนักข่าวใหญ่ๆ สแปมเหล่านี้มักใช้เทคนิคการเลี่ยงคำ (Obfuscation) เช่น การใช้เครื่องหมาย @ หรือสัญลักษณ์พิเศษแทนตัวอักษรเพื่อหลบเลี่ยงระบบคัดกรองมาตรฐานของ YouTube
+จากการขยายตัวของแพลตฟอร์มวิดีโอออนไลน์ในประเทศไทย โดยเฉพาะ YouTube พบปัญหาการคุกคามจากกลุ่มมิจฉาชีพที่ใช้ระบบอัตโนมัติ (Botnet) ในการส่งข้อความสแปมเพื่อโฆษณาเว็บพนันออนไลน์ในช่องความคิดเห็นของยูทูบเบอร์ไทยชื่อดังและช่องสำนักข่าวใหญ่ๆ สแปมเหล่านี้มักใช้เทคนิคการเลี่ยงคำ (Obfuscation) เช่น การใช้เครื่องหมาย @ หรือสัญลักษณ์พิเศษแทนตัวอักษรเพื่อหลบเลี่ยงระบบคัดกรองมาตรฐานของ YouTube
 
 ### ทฤษฎีของอัลกอริทึมที่ใช้พัฒนา
 การศึกษานี้เลือกใช้เทคนิค **Ensemble Learning** ซึ่งเป็นการรวมโมเดลหลายตัวเข้าด้วยกันเพื่อให้ได้ผลการทำนายที่แม่นยำและเสถียรกว่าการใช้โมเดลเดี่ยว โดยประกอบด้วยโมเดล 3 ประเภท:
@@ -196,24 +196,24 @@ with tab2:
 
     st.divider()
 
-    st.subheader("ใช้งานโมเดลและผลลัพธ์", anchor="kanphanan-use-model")
+    st.subheader("ใช้งานโมเดลและผลลัพธ์", anchor="gambling-use-model")
 
     text_input = st.text_area(
         "ข้อความที่ต้องการตรวจสอบ",
         height=120,
-        key="kanphanan_text_area",
+        key="gambling_text_area",
         placeholder="พิมพ์ข้อความที่นี่..."
     )
 
-    if st.button("🔍 Predict", key="kanphanan_predict"):
+    if st.button("🔍 Predict", key="gamble_predict"):
         if not text_input.strip():
             st.warning("กรุณาใส่ข้อความ")
         else:
             with st.spinner("กำลังวิเคราะห์..."):
                 try:
-                    pred = kanphanan_model.predict([text_input.strip()])[0]
-                    result = "KanPhaNan" if pred == 1 else "Clean"
-                    if result == "KanPhaNan":
+                    pred = gambling_model.predict([text_input.strip()])[0]
+                    result = "Gambling" if pred == 1 else "Clean"
+                    if result == "Gambling":
                         st.error(f"ผลลัพธ์: เป็นข้อความมีเกี่ยวข้องกับการพนัน — **{result}** ")
                     else:
                         st.success(f"ผลลัพธ์: เป็นข้อความที่ไม่มีเกี่ยวข้องกับการพนัน — **{result}** ")
