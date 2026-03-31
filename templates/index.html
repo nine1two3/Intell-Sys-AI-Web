@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Systems — AI Web App</title>
+    <style>
+        :root{--primary:#4f46e5;--primary-hover:#4338ca;--bg:#f8fafc;--card:#fff;--border:#e2e8f0;--text:#1e293b;--muted:#64748b;--success:#16a34a;--danger:#dc2626;--radius:12px}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem}
+        h1{font-size:1.8rem;margin-bottom:.25rem}
+        .subtitle{color:var(--muted);margin-bottom:2rem;font-size:.95rem}
+        .main-container{max-width:800px;width:100%}
+
+        /* Tabs */
+        .tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:0}
+        .tab-btn{flex:1;padding:.85rem 1.2rem;font-size:1rem;font-weight:700;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;color:var(--muted);transition:all .2s}
+        .tab-btn:hover{color:var(--text)}
+        .tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
+        .tab-content{display:none;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:2rem;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+        .tab-content.active{display:block}
+
+        /* Scroll link */
+        .scroll-link{display:inline-block;margin-bottom:1.5rem;font-weight:700;color:var(--text);font-size:.95rem;cursor:pointer;text-decoration:none}
+        .scroll-link:hover{color:var(--primary)}
+
+        /* Info section */
+        .info-section{color:var(--muted);font-size:.9rem;line-height:1.7;margin-bottom:1.5rem}
+        .info-section h3{color:var(--text);font-size:1.05rem;margin:1.2rem 0 .4rem}
+        .info-section ul{margin-left:1.2rem;margin-bottom:.5rem}
+        .info-section ol{margin-left:1.2rem;margin-bottom:.5rem}
+
+        /* Divider */
+        .section-divider{border:none;border-top:2px solid var(--border);margin:1.5rem 0}
+
+        /* Use model section */
+        .use-model-title{font-size:1.15rem;font-weight:700;margin-bottom:1rem;color:var(--text)}
+        label{display:block;font-weight:600;margin-bottom:.4rem;font-size:.9rem}
+        input[type="file"],textarea{width:100%;padding:.6rem;border:1px solid var(--border);border-radius:8px;font-size:.9rem;background:#f1f5f9;resize:vertical}
+        textarea{min-height:100px}
+        .btn{display:inline-block;margin-top:1rem;padding:.65rem 1.6rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:.95rem;cursor:pointer;transition:background .2s}
+        .btn:hover{background:var(--primary-hover)}
+        .btn:disabled{opacity:.55;cursor:not-allowed}
+        .result-box{margin-top:1.2rem;padding:1rem;border-radius:8px;background:#f1f5f9;min-height:48px;font-size:.95rem;line-height:1.6;white-space:pre-line;display:none}
+        .result-box.show{display:block}
+        .status-allow{color:var(--success);font-weight:700}
+        .status-deny{color:var(--danger);font-weight:700}
+        .status-gambling{color:var(--danger);font-weight:700}
+        .status-clean{color:var(--success);font-weight:700}
+        .preview-img{max-width:100%;max-height:200px;border-radius:8px;margin-top:.8rem;display:none}
+        footer{margin-top:3rem;color:var(--muted);font-size:.8rem}
+    </style>
+</head>
+<body>
+
+<h1>Intelligent Systems — AI Web App</h1>
+<p class="subtitle">ระบบ AI 2 โมเดล: ตรวจจำแนกรถจักรยานยนต์ &amp; ตรวจจับข้อความพนัน</p>
+
+<div class="main-container">
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('bike')">🏍️ Motorcycle Classifier</button>
+        <button class="tab-btn" onclick="switchTab('gambling')">🎰 Gambling Text Detector</button>
+    </div>
+
+    <!-- ===== Tab 1: Bike Classifier ===== -->
+    <div class="tab-content active" id="tab-bike">
+        <a class="scroll-link" onclick="document.getElementById('bike-use-model').scrollIntoView({behavior:'smooth'})">ทดสอบโมเดลนี้ คลิกที่นี่ (เลื่อนไปส่วน "ใช้งานโมเดล")</a>
+
+        <div class="info-section">
+            <h3>🏍️ Project: Motorcycle 500cc Classification AI</h3>
+            <p>โปรเจกต์นี้พัฒนาขึ้นเพื่อจำแนกรถจักรยานยนต์ผ่านรูปภาพ โดยเน้นการแยกแยะระหว่างรถบิ๊กไบค์ (500cc ขึ้นไป) และรถรุ่นเล็ก เพื่อใช้ในการบริหารจัดการพื้นที่จอดรถหรือการคัดกรองยานพาหนะอัตโนมัติ</p>
+
+            <h3>🛠️ 1. การเตรียมข้อมูล (Data Preparation)</h3>
+            <p>หัวใจสำคัญของโปรเจกต์คือชุดข้อมูลที่มีคุณภาพสูง:</p>
+            <ul>
+                <li><strong>Dataset Structure</strong>: จัดกลุ่มรถออกเป็น 2 คลาส ได้แก่ <code>Allowed</code> (อนุญาต - รุ่น 500cc+) และ <code>Not Allowed</code> (ไม่อนุญาต - รุ่นต่ำกว่า 500cc) โดยใช้รายชื่อรุ่นรถจริงกว่า 100 รุ่น</li>
+                <li><strong>Image Sourcing</strong>: ใช้เทคนิค Automated Scraping ดึงรูปภาพจาก Search Engine โดยเน้น Keyword เฉพาะเจาะจง เช่น "model name + motorcycle side view"</li>
+                <li><strong>Data Sanitization</strong>: ทำการตรวจสอบไฟล์ภาพด้วยไลบรารี PIL เพื่อลบไฟล์ที่เสียหายหรือดาวน์โหลดไม่สมบูรณ์ (Corrupted Data)</li>
+                <li><strong>Data Augmentation</strong>: ใช้เทคนิคการจำลองภาพ เช่น การหมุน (Rotation), การซูม (Zoom), และการพลิกภาพ (Horizontal Flip)</li>
+            </ul>
+
+            <h3>🧠 2. ทฤษฎีของอัลกอริทึม (Algorithm Theory)</h3>
+            <p>เราเลือกใช้สถาปัตยกรรม <strong>MobileNetV2</strong> ซึ่งเป็น Deep Learning Model ระดับสูงจาก Google:</p>
+            <ul>
+                <li><strong>Convolutional Neural Network (CNN)</strong>: โมเดลที่เลียนแบบการทำงานของประสาทตาในการตรวจจับเส้นขอบ พื้นผิว และรูปทรงของวัตถุ</li>
+                <li><strong>Transfer Learning</strong>: การนำโมเดลที่ถูกเทรนมาแล้วจากชุดข้อมูลมหาศาล (ImageNet) มาปรับใช้ โดยไม่ต้องเริ่มเทรนจากศูนย์</li>
+                <li><strong>Fine-Tuning Strategy</strong>: การปลดล็อกเลเยอร์ส่วนท้าย (Unfreeze) ของ MobileNetV2 เพื่อให้โมเดลปรับจูนน้ำหนักให้เข้ากับลักษณะเฉพาะของมอเตอร์ไซค์</li>
+            </ul>
+
+            <h3>🚀 3. ขั้นตอนการพัฒนาโมเดล (Model Development)</h3>
+            <ol>
+                <li><strong>Architecture Setup</strong>: วางโครงสร้าง Sequential Model ประกอบด้วย MobileNetV2 ตามด้วย Global Average Pooling และ Dense Layer</li>
+                <li><strong>Regularization</strong>: เพิ่ม Batch Normalization และ Dropout Rate (0.4) เพื่อลดการเกิด Overfitting</li>
+                <li><strong>Hyperparameter Tuning</strong>: กำหนด Learning Rate ไว้ที่ระดับต่ำมาก (1e-5) เพื่อให้การปรับจูนน้ำหนักมีความละเอียดสูง</li>
+                <li><strong>Training Callbacks</strong>: ใช้ <code>EarlyStopping</code> เพื่อหยุดการเทรนเมื่อความแม่นยำสูงสุด และ <code>ReduceLROnPlateau</code> เพื่อปรับลดความเร็วในการเรียนรู้</li>
+            </ol>
+
+            <h3>📚 4. แหล่งอ้างอิงข้อมูล (References)</h3>
+            <ul>
+                <li><strong>Model Architecture</strong>: MobileNetV2: Inverted Residuals and Linear Bottlenecks (Google Research)</li>
+                <li><strong>Library</strong>: TensorFlow &amp; Keras Framework (Google OSS)</li>
+                <li><strong>Data Provider</strong>: Bing Image Search API via <code>bing-image-downloader</code> library</li>
+                <li><strong>Implementation Guide</strong>: Keras API Documentation (https://keras.io/)</li>
+            </ul>
+        </div>
+
+        <hr class="section-divider">
+
+        <div id="bike-use-model">
+            <p class="use-model-title">ใช้งานโมเดลและผลลัพธ์</p>
+            <label for="bikeFile">เลือกรูปภาพ</label>
+            <input type="file" id="bikeFile" accept="image/*">
+            <img id="bikePreview" class="preview-img" alt="preview">
+            <button class="btn" id="bikeBtn" onclick="predictBike()">🔍 Predict</button>
+            <div class="result-box" id="bikeResult"></div>
+        </div>
+    </div>
+
+    <!-- ===== Tab 2: Gambling Detector ===== -->
+    <div class="tab-content" id="tab-gambling">
+        <a class="scroll-link" onclick="document.getElementById('gambling-use-model').scrollIntoView({behavior:'smooth'})">ทดสอบโมเดลนี้ คลิกที่นี่ (เลื่อนไปส่วน "ใช้งานโมเดล")</a>
+
+        <div class="info-section">
+            <h3>ที่มาและความสำคัญของปัญหา</h3>
+            <p>จากการขยายตัวของแพลตฟอร์มวิดีโอออนไลน์ในประเทศไทย โดยเฉพาะ YouTube พบปัญหาการคุกคามจากกลุ่มมิจฉาชีพที่ใช้ระบบอัตโนมัติ (Botnet) ในการส่งข้อความสแปมเพื่อโฆษณาเว็บพนันออนไลน์ในช่องความคิดเห็นของยูทูบเบอร์ไทยชื่อดังและช่องสำนักข่าวใหญ่ๆ สแปมเหล่านี้มักใช้เทคนิคการเลี่ยงคำ (Obfuscation) เช่น การใช้เครื่องหมาย @ หรือสัญลักษณ์พิเศษแทนตัวอักษรเพื่อหลบเลี่ยงระบบคัดกรองมาตรฐานของ YouTube</p>
+
+            <h3>ทฤษฎีของอัลกอริทึมที่ใช้พัฒนา</h3>
+            <p>การศึกษานี้เลือกใช้เทคนิค <strong>Ensemble Learning</strong> ซึ่งเป็นการรวมโมเดลหลายตัวเข้าด้วยกัน โดยประกอบด้วยโมเดล 3 ประเภท:</p>
+            <ul>
+                <li><strong>Random Forest (Decision Tree based):</strong> ใช้เทคนิค Bagging โดยการสร้าง Decision Trees จำนวนมากที่เป็นอิสระต่อกัน และใช้ Majority Voting เพื่อตัดสินว่าข้อความเป็นสแปมหรือไม่</li>
+                <li><strong>Gradient Boosting (Boosting based):</strong> ทำงานในลักษณะลำดับ โดยต้นไม้ต้นใหม่จะพยายามเรียนรู้และแก้ไขข้อผิดพลาดจากต้นไม้ต้นก่อนหน้า มีความแม่นยำสูงมาก</li>
+                <li><strong>Logistic Regression (Linear based):</strong> ใช้ฟังก์ชันซิกมอยด์ในการคำนวณความน่าจะเป็น ทำหน้าที่เป็น Baseline ที่ดีในการจำแนก Binary Classification (Spam/Ham)</li>
+            </ul>
+
+            <h3>ขั้นตอนการพัฒนาโมเดล</h3>
+            <ol>
+                <li><strong>การรวบรวมและเตรียมข้อมูล:</strong> นำคอมเมนต์มาลบอักขระพิเศษ และทำ Normalization เพื่อเปลี่ยนคำพรางให้เป็นคำมาตรฐาน</li>
+                <li><strong>การตัดคำและสกัดคุณลักษณะ:</strong> ใช้ไลบรารี PyThaiNLP ในการตัดคำภาษาไทย และแปลงข้อความเป็นตัวเลขด้วยวิธี TF-IDF</li>
+                <li><strong>การฝึกฝนแบบ Ensemble:</strong> นำข้อมูลเข้าฝึกฝนโมเดลทั้ง 3 ตัวพร้อมกัน และใช้เทคนิค Voting Classifier เพื่อรวมผลลัพธ์</li>
+                <li><strong>การวัดผล:</strong> ทดสอบประสิทธิภาพด้วย Accuracy และ F1-score</li>
+            </ol>
+
+            <h3>แหล่งที่มาของชุดข้อมูล</h3>
+            <ul>
+                <li><strong>UCI Machine Learning Repository:</strong> ชุดข้อมูล YouTube Spam Collection Data Set — คอมเมนต์จริงกว่า 1,956 ข้อความ</li>
+                <li><strong>YouTube Data API v3:</strong> ดึงคอมเมนต์จริงจากช่องยูทูบเบอร์ไทยและสำนักข่าวไทย</li>
+            </ul>
+
+            <h3>แหล่งอ้างอิง</h3>
+            <ul>
+                <li>UCI Machine Learning Repository: YouTube Spam Collection</li>
+                <li>PyThaiNLP: Thai Natural Language Processing Library</li>
+                <li>สถาบันวิจัยปัญญาประดิษฐ์ประเทศไทย (AIResearch) — WangchanBERTa</li>
+            </ul>
+        </div>
+
+        <hr class="section-divider">
+
+        <div id="gambling-use-model">
+            <p class="use-model-title">ใช้งานโมเดลและผลลัพธ์</p>
+            <label for="gamblingText">ข้อความที่ต้องการตรวจสอบ</label>
+            <textarea id="gamblingText" placeholder="พิมพ์ข้อความที่นี่..."></textarea>
+            <button class="btn" id="gamblingBtn" onclick="predictGambling()">🔍 Predict</button>
+            <div class="result-box" id="gamblingResult"></div>
+        </div>
+    </div>
+
+</div>
+
+<footer>Intelligent Systems — 6704063611361</footer>
+
+<script>
+// ---- Tab switching ----
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    if (tab === 'bike') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('tab-bike').classList.add('active');
+    } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('tab-gambling').classList.add('active');
+    }
+}
+
+// ---- Image preview ----
+document.getElementById('bikeFile').addEventListener('change', function () {
+    const preview = document.getElementById('bikePreview');
+    if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+        reader.readAsDataURL(this.files[0]);
+    } else {
+        preview.style.display = 'none';
+    }
+});
+
+// ---- Bike prediction ----
+async function predictBike() {
+    const fileInput = document.getElementById('bikeFile');
+    const resultBox = document.getElementById('bikeResult');
+    const btn = document.getElementById('bikeBtn');
+
+    if (!fileInput.files.length) { alert('กรุณาเลือกรูปภาพ'); return; }
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+
+    btn.disabled = true;
+    btn.textContent = '⏳ กำลังวิเคราะห์...';
+    resultBox.className = 'result-box show';
+    resultBox.innerHTML = 'กำลังประมวลผล...';
+
+    try {
+        const res = await fetch('/predict/bike', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.error) {
+            resultBox.innerHTML = '❌ Error: ' + data.error;
+        } else {
+            const cls = data.status === 'ALLOW' ? 'status-allow' : 'status-deny';
+            resultBox.innerHTML =
+                `<span class="${cls}">Status: ${data.status}</span>\n` +
+                `Class: ${data.class}`;
+        }
+    } catch (e) {
+        resultBox.innerHTML = '❌ เกิดข้อผิดพลาด: ' + e.message;
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '🔍 Predict';
+    }
+}
+
+// ---- Gambling prediction ----
+async function predictGambling() {
+    const textInput = document.getElementById('gamblingText');
+    const resultBox = document.getElementById('gamblingResult');
+    const btn = document.getElementById('gamblingBtn');
+    const text = textInput.value.trim();
+
+    if (!text) { alert('กรุณาพิมพ์ข้อความ'); return; }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ กำลังวิเคราะห์...';
+    resultBox.className = 'result-box show';
+    resultBox.innerHTML = 'กำลังประมวลผล...';
+
+    try {
+        const res = await fetch('/predict/gambling', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text })
+        });
+        const data = await res.json();
+        if (data.error) {
+            resultBox.innerHTML = '❌ Error: ' + data.error;
+        } else {
+            const cls = data.result === 'Gambling' ? 'status-gambling' : 'status-clean';
+            resultBox.innerHTML = `ผลลัพธ์: <span class="${cls}">${data.result}</span>`;
+        }
+    } catch (e) {
+        resultBox.innerHTML = '❌ เกิดข้อผิดพลาด: ' + e.message;
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '🔍 Predict';
+    }
+}
+</script>
+
+</body>
+</html>
