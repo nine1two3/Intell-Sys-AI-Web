@@ -53,7 +53,7 @@ def preprocess_image(img: Image.Image) -> np.ndarray:
 st.title("Intelligent Systems — AI Web App")
 st.caption("ระบบ AI 2 โมเดล: ตรวจจำแนกรถจักรยานยนต์ & ตรวจจับข้อความพนัน")
 
-tab1, tab2 = st.tabs(["Motorcycle Classifier", "Gambling Text Detector"])
+tab1, tab2 = st.tabs(["Motorcycle Classifier", "KanPhaNan Text Detector"])
 
 # ══════════════════════════════════════════════════════════
 #  Tab 1 — Motorcycle Classifier
@@ -162,7 +162,7 @@ with tab1:
                     st.error(f"Error: {e}")
 
 # ══════════════════════════════════════════════════════════
-#  Tab 2 — KanPhaNan Text Detector
+#  Tab 2 — KranPhaNan Text Detector
 # ══════════════════════════════════════════════════════════
 with tab2:
     st.markdown('[ทดสอบโมเดลนี้ คลิกที่นี่ (เลื่อนไปส่วน "ใช้งานโมเดล")](#kanphanan-use-model)')
